@@ -1,0 +1,20 @@
+export class Timesheet {
+
+  constructor(
+              public id : number,
+              public taskName: string,
+              public projectName: string,
+              public assignUser: string,
+              public taskStatus: string,
+              public taskStartDt: Date,
+              public taskEndDt: Date,
+              // public createUser: string,
+              // public createDate: Date,
+              // public modifyUser: string,
+              // public modifyDate: Date,
+              public userId: number,
+              public statusId: number 
+              ){
+              }
+
+}
