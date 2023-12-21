@@ -19,6 +19,7 @@ public class TimesheetDto {
 	private String taskStatus;
 	private int userId;
 	private int statusId;
+	private String category;
 	private String createUser;
 	private Date createDate;
 	private String modifyUser;

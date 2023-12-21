@@ -18,6 +18,7 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Integer>{
 	 * @Query("SELECT t FROM Timesheet t WHERE (:taskName IS NULL OR :taskName = '' OR t.taskName = :taskName)"
 	 * )
 	 */
+	@Query("SELECT t FROM Timesheet t ORDER BY t.taskStartDt DESC")
 	Page<Timesheet> findByTaskNameContaining(@Param("taskName") String taskName, Pageable pageable);
 	
 	

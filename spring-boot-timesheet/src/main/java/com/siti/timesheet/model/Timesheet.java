@@ -119,6 +119,16 @@ public class Timesheet {
     @Column(name = "statusId")
     @JsonProperty("statusId")
     private int statusId;
+    
+    /**
+     * Attribute ID: A014
+     * Key: category
+     * Description: category of the user who created this record.
+     * Constraints: Optional, Max length 255
+     */
+    @Column(name = "category", length = 255)
+    @JsonProperty("category")
+    private String category;
 
     /**
      * Attribute ID: A016
