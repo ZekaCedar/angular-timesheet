@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, InjectionToken, OnInit, Optional } from '@angular/core';
+import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TimesheetService } from 'src/app/services/timesheet.service';
@@ -29,7 +29,6 @@ export class TimesheetModalComponent implements OnInit {
               private userService: UserService,
               private statusService: StatusService,
               private router: Router,
-              private cdr: ChangeDetectorRef,
               @Optional() public dialogRef: MatDialogRef<TimesheetModalComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any){
                 console.log("this Data is from TimesheetModalComponent");
@@ -46,6 +45,7 @@ export class TimesheetModalComponent implements OnInit {
         taskStatus:[''],
         taskStartDt:[''],
         taskEndDt:[''],
+        category:['']
      /*    createUser:[''],
         createDate:[''],
         modifyUser:[''],
@@ -86,10 +86,11 @@ export class TimesheetModalComponent implements OnInit {
       timesheet: {
         taskName: timesheetData.taskName,
         projectName: timesheetData.projectName,
+        category: timesheetData.category,
         assignUser: timesheetData.assignUser,
         taskStatus: timesheetData.taskStatus,
         taskStartDt: timesheetData.taskStartDt,
-        taskEndDt: timesheetData.taskEndDt,
+        taskEndDt: timesheetData.taskEndDt
         // ... other fields ...
       }
     });
@@ -101,11 +102,42 @@ export class TimesheetModalComponent implements OnInit {
     console.log("The Project Name is :" + this.timesheetFormGroup.get('timesheet')?.value.projectName);
 
     let TimesheetFormData = this.timesheetFormGroup.get('timesheet')?.value;
+    debugger;
+    const selectedUser = TimesheetFormData.assignUser;
+    const selectedStatus = TimesheetFormData.taskStatus;
+    console.log('Selected value on submit:', selectedUser);
+    console.log('Selected value on submit:', selectedStatus);
+    console.log(this.userList);
+    console.log(this.statusList);
+
+    // Object.values(this.userList).forEach(user => {
+    //   debugger;
+    //   if(user.userName == selectedUser){
+    //     console.log('User ID:' ,user.id, 'Username:', user.userName);
+    //   }
+    // });
+
+    this.userList.forEach(user => {
+      // debugger;
+      if(user.userName == selectedUser){
+        console.log('User ID:' ,user.id, 'User:', user.userName);
+        this.selectedUserId = user.id;
+      }
+    });
+
+    this.statusList.forEach(status => {
+      // debugger;
+      if(status.statusName == selectedStatus){
+        console.log('Status ID:' ,status.id, 'Status:', status.statusName);
+        this.selectedStatusId = status.id;
+      }
+    });
 
     let timesheet = new Timesheet(
       TimesheetFormData.Id,
       TimesheetFormData.taskName,
       TimesheetFormData.projectName,
+      TimesheetFormData.category,
       TimesheetFormData.assignUser,
       TimesheetFormData.taskStatus,
       new Date(TimesheetFormData.taskStartDt),
@@ -115,11 +147,11 @@ export class TimesheetModalComponent implements OnInit {
       // TimesheetFormData.modifyUser = "null",
       // TimesheetFormData.modifyDate = new Date(""),
       TimesheetFormData.userId = this.selectedUserId,
-      TimesheetFormData.statusId = this.selectedStatusId,
+      TimesheetFormData.statusId = this.selectedStatusId
     );
 
     console.log(timesheet);
-
+    
     if(this.update){
       this.handleUpdateTimesheet(this.timesheetId, timesheet);
     }else{
@@ -134,9 +166,13 @@ export class TimesheetModalComponent implements OnInit {
     this.timesheetService.createTimesheet(timesheet).subscribe(
       {
         next: response => {
+          this.onNoClick();
           alert(`Your Timesheet is sucessfully created`);
+          // this.timesheetService.notifyTimesheetCreation(timesheet);
+          // this.timesheetService.
         },
         error: err => {
+          this.onNoClick();
           alert(`There was an error: ${err.message}`);
         }
       }
@@ -148,9 +184,11 @@ export class TimesheetModalComponent implements OnInit {
     this.timesheetService.updateTimesheet(timesheetId, timesheet).subscribe(
       {
         next: response => {
+          this.onNoClick();
           alert(`Your Timesheet is sucessfully updated`);
         },
         error: err => {
+          this.dialogRef.close();
           alert(`There was an error: ${err.message}`);
         }
       }
@@ -160,44 +198,6 @@ export class TimesheetModalComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-  selectedHandlerUserId(event: any) {
-    // Retrieve the selected value from the event object
-    const selectedValue = event.target.value;
-    console.log("Selected User :", selectedValue);
-    // Now you can use this value as needed
-
-    // Split the string at the colon and take the first part
-    const userIdString = selectedValue.split(':')[0].trim();
-
-    // Optionally convert it to a number
-    let userId = parseInt(userIdString, 10);
-
-    console.log("Extracted User ID:", userId+=1);
-
-    // this.selectedUserId = userId == 0 ? 1 : userId;
-    this.selectedUserId = userId+=1;
-
-  }
-
-  selectedHandlerStatusId(event: any) {
-    // Retrieve the selected value from the event object
-    const selectedValue = event.target.value;
-    console.log("Selected Status:", selectedValue);
-    // Now you can use this value as needed
-
-    // Split the string at the colon and take the first part
-    const statusIdString = selectedValue.split(':')[0].trim();
-
-    // Optionally convert it to a number
-    let statusId = parseInt(statusIdString, 10);
-
-    console.log("Extracted Status ID:", statusId+=1);
-
-    // this.selectedStatusId = statusId == 0 ? 1 : statusId;
-    this.selectedStatusId = statusId+=1;
-  }
-
 
 }
 

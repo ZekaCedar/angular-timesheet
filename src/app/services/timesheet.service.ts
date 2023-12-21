@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map } from 'rxjs';
 import { Timesheet } from '../common/timesheet';
 
 @Injectable({
@@ -11,12 +11,23 @@ export class TimesheetService {
   private baseUrl = 'http://localhost:8080/api/1.0/timesheet';
 
   private createUrl = this.baseUrl + '/create';
+  
+  // private timesheetCreateSource = new BehaviorSubject<Timesheet | null>(null);
+  // private timesheetUpdateSource = new BehaviorSubject<Timesheet | null>(null);
+  // private timesheetDeleteSource = new Subject<number>(); 
+
+  // timesheetCreated = this.timesheetCreateSource.asObservable();
 
   constructor(private httpClient: HttpClient) {}
 
   createTimesheet(timesheet: Timesheet): Observable<any> {
     return this.httpClient.post<Timesheet>(this.createUrl, timesheet);
   }
+
+  // notifyTimesheetCreation(timesheet: Timesheet) {
+  //   console.log("data notified after create: " + timesheet);
+  //   this.timesheetCreateSource.next(timesheet);
+  // }
 
   updateTimesheet(theId: number, timesheet: Timesheet): Observable<any> {
     const editUrl = this.baseUrl + `/edit/${theId}`;

@@ -4,6 +4,7 @@ export class Timesheet {
               public id : number,
               public taskName: string,
               public projectName: string,
+              public category: string,
               public assignUser: string,
               public taskStatus: string,
               public taskStartDt: Date,
@@ -13,7 +14,7 @@ export class Timesheet {
               // public modifyUser: string,
               // public modifyDate: Date,
               public userId: number,
-              public statusId: number 
+              public statusId: number,
               ){
               }
 

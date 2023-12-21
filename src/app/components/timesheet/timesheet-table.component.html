@@ -2,6 +2,7 @@
   <thead>
     <tr>
       <th>Project</th>
+      <th>Project Category</th>
       <th>Task</th>
       <th>Assigned To</th>
       <th>From</th>
@@ -14,6 +15,7 @@
   <tbody>
     <tr *ngFor="let tempTimesheet of timesheet">
       <td>{{ tempTimesheet.projectName }}</td>
+      <td>{{ tempTimesheet.category }}</td>
       <td>{{ tempTimesheet.taskName }}</td>
       <td>{{ tempTimesheet.assignUser }}</td>
       <td>{{ tempTimesheet.taskStartDt }}</td>
